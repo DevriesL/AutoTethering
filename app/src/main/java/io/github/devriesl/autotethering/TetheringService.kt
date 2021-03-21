@@ -2,46 +2,62 @@ package io.github.devriesl.autotethering
 
 import android.accessibilityservice.AccessibilityService
 import android.content.*
+import android.hardware.usb.UsbManager
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 
 class TetheringService : AccessibilityService() {
+    private var serviceConnected = false
     lateinit var usbBroadcastReceiver: UsbBroadcastReceiver
 
     inner class UsbBroadcastReceiver : BroadcastReceiver() {
         private fun launchTetherSettings(context: Context) {
             while (true) {
                 try {
-                    val intent = Intent(Intent.ACTION_MAIN, null)
-                    intent.addCategory(Intent.CATEGORY_LAUNCHER)
-                    intent.component = ComponentName(
-                        "com.android.settings",
-                        "com.android.settings.TetherSettings"
-                    )
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    context.startActivity(intent)
-                    break
-                } catch (e: java.lang.Exception) {
+                    if (serviceConnected) {
+                        val intent = Intent(Intent.ACTION_MAIN, null)
+                        intent.addCategory(Intent.CATEGORY_LAUNCHER)
+                        intent.component = ComponentName(
+                            "com.android.settings",
+                            "com.android.settings.TetherSettings"
+                        )
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        context.startActivity(intent)
+                        break
+                    } else {
+                        Thread.sleep(5_000)
+                        continue
+                    }
+                } catch (e: Exception) {
                     Thread.sleep(1_000)
                 }
             }
         }
 
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (context != null) {
-                launchTetherSettings(context)
+            when (intent!!.action) {
+                UsbManager.ACTION_USB_DEVICE_ATTACHED -> {
+                    if (context != null) {
+                        launchTetherSettings(context)
+                    }
+                }
             }
         }
     }
 
     override fun onCreate() {
         val filter = IntentFilter()
-        filter.addAction("android.intent.action.ACTION_POWER_CONNECTED")
+        filter.addAction("android.intent.action.BOOT_COMPLETED")
+        filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED)
         usbBroadcastReceiver = UsbBroadcastReceiver()
         registerReceiver(usbBroadcastReceiver, filter)
         super.onCreate()
     }
 
+    override fun onServiceConnected() {
+        serviceConnected = true
+        super.onServiceConnected()
+    }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         when (event?.eventType) {
