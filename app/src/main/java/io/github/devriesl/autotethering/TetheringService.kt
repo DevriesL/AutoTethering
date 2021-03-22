@@ -66,15 +66,16 @@ class TetheringService : AccessibilityService() {
                     val rootNode: AccessibilityNodeInfo = event.source
 
                     val nodeList: List<AccessibilityNodeInfo> = rootNode
-                        .findAccessibilityNodeInfosByText("以太网络共享");
+                        .findAccessibilityNodeInfosByText(getString(R.string.ethernet_tether_checkbox_text));
                     nodeList.forEach {
                         val preferenceNode = it.parent
                         for (index in 0 until preferenceNode.childCount) {
                             val child = preferenceNode.getChild(index)
-                            if (child.isCheckable && child.text == "关闭")
+                            if (child.isCheckable && !child.isChecked)
                                 preferenceNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
                         }
                     }
+                    Thread.sleep(1_000)
                 }
             }
             else -> { }

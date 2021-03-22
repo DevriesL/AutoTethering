@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">以太网共享自启</string>
+
+    <string name="tethering_service_label">以太网共共享自启助手服务</string>
+    <string name="tethering_service_description">通过无障碍服务自动在重启后连接USB网卡的情况下开启以太网络共享</string>
+
+    <!-- AOSP does not have translation of it-->
+    <string name="ethernet_tether_checkbox_text">以太网</string>
+
+</resources>
