@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">AutoTethering</string>
+    <string name="autotethering_settings_title">AutoTethering Setting</string>
 
-    <string name="tethering_service_label">Auto Tethering Helper Service</string>
+    <string name="tethering_service_label">Auto Tethering Helper</string>
     <string name="tethering_service_description">Accessibility service for doing automation of ethernet tethering when device reboot with USB ethernet adapter</string>
 
     <string name="ethernet_tether_checkbox_text">Ethernet tethering</string>

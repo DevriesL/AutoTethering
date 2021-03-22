@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="io.github.devriesl.autotethering">
 
     <application
@@ -10,8 +11,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AutoTethering">
 
+        <activity
+            android:name="io.github.devriesl.autotethering.SettingsActivity"
+            android:exported="true"
+            android:label="@string/autotethering_settings_title"
+            android:launchMode="singleTop"
+            tools:ignore="ExportedActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.accessibilityservice.SERVICE_SETTINGS" />
+            </intent-filter>
+        </activity>
+
         <service android:name=".TetheringService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:settingsActivity="io.github.devriesl.autotethering.SettingsActivity"
             android:label="@string/tethering_service_label">
             <meta-data
                 android:name="android.accessibilityservice"

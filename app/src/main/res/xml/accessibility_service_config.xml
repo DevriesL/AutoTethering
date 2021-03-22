@@ -5,4 +5,4 @@
     android:canRetrieveWindowContent="true"
     android:description="@string/tethering_service_description"
     android:notificationTimeout="100"
-    android:settingsActivity="io.github.devriesl.autotethering/.SettingsActivity" />
+    android:settingsActivity="io.github.devriesl.autotethering.SettingsActivity" />
