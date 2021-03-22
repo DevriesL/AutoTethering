@@ -7,4 +7,8 @@
 
     <string name="ethernet_tether_checkbox_text">Ethernet tethering</string>
 
+    <string name="settings_customize_tether_keyword">Customize others keyword of tether switch</string>
+
+    <string name="settings_about_author">Author: github.com/DevriesL</string>
+
 </resources>

@@ -8,4 +8,8 @@
     <!-- AOSP does not have translation of it-->
     <string name="ethernet_tether_checkbox_text">以太网</string>
 
+    <string name="settings_customize_tether_keyword">自定义其它网络共享开关的关键字</string>
+
+    <string name="settings_about_author">作者： 微博@魔法师蛋小丁</string>
+
 </resources>

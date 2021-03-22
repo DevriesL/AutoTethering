@@ -5,8 +5,11 @@ import android.content.*
 import android.hardware.usb.UsbManager
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import io.github.devriesl.autotethering.SettingsActivity.Companion.KEYWORD_TEXT
+import io.github.devriesl.autotethering.SettingsActivity.Companion.SHARED_PREFS_NAME
 
 class TetheringService : AccessibilityService() {
+    private lateinit var tetherSwitchKeyword: String
     private var serviceConnected = false
     lateinit var usbBroadcastReceiver: UsbBroadcastReceiver
 
@@ -46,6 +49,13 @@ class TetheringService : AccessibilityService() {
     }
 
     override fun onCreate() {
+        tetherSwitchKeyword = getString(R.string.ethernet_tether_checkbox_text)
+        val sharedPrefs = this.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        val keyword = sharedPrefs.getString(KEYWORD_TEXT, tetherSwitchKeyword)
+        if (!keyword.isNullOrEmpty() && keyword.isNotEmpty()) {
+            tetherSwitchKeyword = keyword
+        }
+
         val filter = IntentFilter()
         filter.addAction("android.intent.action.BOOT_COMPLETED")
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED)
@@ -66,23 +76,25 @@ class TetheringService : AccessibilityService() {
                     val rootNode: AccessibilityNodeInfo = event.source
 
                     val nodeList: List<AccessibilityNodeInfo> = rootNode
-                        .findAccessibilityNodeInfosByText(getString(R.string.ethernet_tether_checkbox_text));
+                        .findAccessibilityNodeInfosByText(tetherSwitchKeyword);
                     nodeList.forEach {
                         val preferenceNode = it.parent
                         for (index in 0 until preferenceNode.childCount) {
                             val child = preferenceNode.getChild(index)
-                            if (child.isCheckable && !child.isChecked)
+                            if (child.isCheckable && !child.isChecked) {
                                 preferenceNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                                Thread.sleep(1_000)
+                            }
                         }
                     }
-                    Thread.sleep(1_000)
                 }
             }
-            else -> { }
+            else -> {
+            }
         }
     }
 
-    override fun onInterrupt() { }
+    override fun onInterrupt() {}
 
     companion object {
         const val TAG = "TetheringService"
